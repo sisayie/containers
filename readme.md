@@ -36,6 +36,8 @@ Default output format: json
 
 >**Security tip:** don't put AWS access keys directly into your Dockerfile or source code.
 
+---
+
 ## Step 2. Create Containerized Application
 ### 2.1 Create the app
 Create a directory:
