@@ -20,7 +20,7 @@ Configure your AWS credentials:
 
 `aws configure`
 
-You'll be asked for:
+Enter the following when prompted:
 
 ```
 AWS Access Key ID:
@@ -63,7 +63,7 @@ Create a file named:
 Put this inside:
 
 ```
-FROM node:22-alpine
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -111,6 +111,8 @@ Hello from Docker on AWS!
 Stop the container with: `Ctrl+C`
 
 ## Step 3. Upload the Image to Amazon ECR Repository
+ECR repositories are where Docker images are stored.
+
 ### 3.1 Create Amazon ECR Repository
 Next task is to create a private container registry in AWS.
 
@@ -120,13 +122,13 @@ Using the CLI:
 ```
 aws ecr create-repository \
   --repository-name my-docker-app \
-  --region eu-central-1
+  --region us-east-1
 ```
 AWS will return information about the repository.
 
-Your ECR repository will have an address similar to:
+Your ECR repository will have URI (an address) similar to:
 
-`123456789012.dkr.ecr.eu-central-1.amazonaws.com/my-docker-app`
+`123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app`
 
 The exact account ID and region will be different for your AWS account.
 
@@ -135,10 +137,10 @@ Docker needs permission to push images to your ECR repository.
 
 Run:
 ```
-aws ecr get-login-password --region eu-central-1 | \
+aws ecr get-login-password --region us-east-1 | \
 docker login \
 --username AWS \
---password-stdin 123456789012.dkr.ecr.eu-central-1.amazonaws.com
+--password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
 ```
 You should receive:
 
@@ -146,7 +148,7 @@ You should receive:
 
 Replace:
 
-`123456789012` with your AWS account ID.
+`123456789012` with your AWS account ID. 
 
 You can retrieve your account ID with:
 
@@ -158,7 +160,7 @@ ECR expects the image to be tagged with the ECR repository address.
 For example:
 ```
 docker tag my-docker-app:latest \
-123456789012.dkr.ecr.eu-central-1.amazonaws.com/my-docker-app:latest
+123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app:latest
 ```
 You can verify it:
 
@@ -169,16 +171,16 @@ You should now have something like:
 REPOSITORY
 my-docker-app
 
-123456789012.dkr.ecr.eu-central-1.amazonaws.com/my-docker-app
+123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app
 ```
 
 ### 3.4. Push the image to Amazon ECR
 Now push it:
 ```
 docker push \
-123456789012.dkr.ecr.eu-central-1.amazonaws.com/my-docker-app:latest
+123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app:latest
 ```
-You'll see Docker uploading several layers:
+Docker will upload several layers:
 ```
 The push refers to repository [...]
 ...
@@ -188,8 +190,12 @@ Congratulations!
 
 Your Docker image is now stored in Amazon ECR.
 
-You can view it in:
+You can view it listed in:
 
-**AWS Console** → **ECR** → **Repositories** → **my-docker-app**
+**AWS Console** → **ECR** → **Repositories**
 
 ## 4. Running the Container using ECS
+
+ECR is essentially your container image storage.
+
+To actually run the container, you will use Amazon ECS.
