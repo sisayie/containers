@@ -1,6 +1,6 @@
 # Containers in AWS
 
-## Step 1. Prerequisites
+## Step 1. Preparation
 
 Install:
 
@@ -30,24 +30,25 @@ Default output format:
 ```
 For example:
 
-Default region name: eu-central-1
+Default region name: us-east-1
 
 Default output format: json
 
-Security tip: don't put AWS access keys directly into your Dockerfile or source code.
+**Security tip:** don't put AWS access keys directly into your Dockerfile or source code.
 
-## Step 2. Create a simple Docker application
+## Step 2. Create Containerized Application
 ### 2.1 Create the app
 Create a directory:
-
-
 
 ```
 mkdir my-docker-app
 cd my-docker-app
 
 ```
-Create a simple python app and save it as `app.py`
+
+- Create `requirement.txt` file that should contain the dependencies. For this example the dependency is: `Flask==3.1.2`
+
+- Create a simple python app and save it as `app.py`
 
 ```python
 print("Hello from Docker on AWS!")
@@ -66,11 +67,15 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY . ./app
+COPY requirements.txt .
 
-EXPOSE 8000
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD \["python", "app.py"]
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
 ```
 
 ### 2.3 Build the Docker image
@@ -93,11 +98,11 @@ Before involving AWS, make sure the container works.
 
 Run:
 
-`docker run -p 3000:3000 my-docker-app`
+`docker run -p 5000:5000 my-docker-app`
 
 Then open:
 
-`http://localhost:8000`
+`http://localhost:5000`
 
 You should see:
 ```
@@ -105,7 +110,8 @@ Hello from Docker on AWS!
 ```
 Stop the container with: `Ctrl+C`
 
-## Step 3. Create an Amazon ECR repository
+## Step 3. Upload the Image to Amazon ECR Repository
+### 3.1 Create Amazon ECR Repository
 Next task is to create a private container registry in AWS.
 
 You can do this through the AWS Console, or with the AWS CLI.
@@ -124,7 +130,7 @@ Your ECR repository will have an address similar to:
 
 The exact account ID and region will be different for your AWS account.
 
-## Step 4. Authenticate Docker with ECR
+### 3.2. Authenticate Docker with ECR
 Docker needs permission to push images to your ECR repository.
 
 Run:
@@ -146,7 +152,7 @@ You can retrieve your account ID with:
 
 `aws sts get-caller-identity`
 
-## Step 5. Tag your Docker image
+### 3.3. Tag the Docker image
 ECR expects the image to be tagged with the ECR repository address.
 
 For example:
@@ -166,7 +172,7 @@ my-docker-app
 123456789012.dkr.ecr.eu-central-1.amazonaws.com/my-docker-app
 ```
 
-## Step 6. Push the image to Amazon ECR
+### 3.4. Push the image to Amazon ECR
 Now push it:
 ```
 docker push \
@@ -185,3 +191,5 @@ Your Docker image is now stored in Amazon ECR.
 You can view it in:
 
 **AWS Console** → **ECR** → **Repositories** → **my-docker-app**
+
+## 4. Running the Container using ECS
