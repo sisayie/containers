@@ -196,3 +196,26 @@ Your Docker image is now stored in Amazon ECR.
 You can view it listed in:
 
 **AWS Console** → **ECR** → **Repositories**
+
+### 3.5 Pull the Docker image from Amazon ECR
+You can pull docker images stored in Amazon ECR and run them on your local host or EC2 server or any other server. But before that you need set up permissions. 
+
+**Required AWS permissions**
+The IAM user/role doing this needs permissions such as:
+```
+ecr:GetAuthorizationToken
+ecr:BatchCheckLayerAvailability
+ecr:GetDownloadUrlForLayer
+ecr:BatchGetImage
+```
+For a private ECR repository, you also need network access to ECR if you're pulling from a private environment.
+
+Once the permissions are set, you need to authenticate like we did in step `3.2` above and run the command:
+```
+docker pull 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
+```
+Here again, you need to replace `123456789012` with your account id and the region to your region.
+
+Verify it using `docker images`. 
+
+Once the image is available, you can run it as we did in step `2.4` above.
