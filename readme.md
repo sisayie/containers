@@ -228,3 +228,131 @@ Here again, you need to replace `123456789012` with your account id and the regi
 Verify it using `docker images`. 
 
 Once the image is available, you can run it as we did in step `2.4` above.
+
+---
+
+## 4. Running the Container using ECS
+
+ECR is essentially your container image storage.
+
+To actually run the container, you will use Amazon ECS.
+
+### 4.1 Create an ECS cluster
+Make sure you have created an IAM role for container services.
+
+Open the AWS Console and go to:
+
+ECS → Clusters → Create cluster
+
+Choose a cluster name such as:
+
+`my-docker-cluster`
+
+For the infrastructure, choose:
+
+`AWS Fargate`
+
+Create the cluster.
+
+### 4.2 Create an ECS Task Definition
+An ECS task definition tells AWS how your container should run.
+
+Go to:
+
+**ECS** → **Task definitions** → **Create new task definition*
+
+Choose:
+```
+Task definition family:
+my-docker-app
+```
+For compute, choose a small configuration suitable for testing, for example:
+```
+CPU: 0.5 vCPU
+Memory: 1 GB
+```
+Then configure the container.
+
+Container name: `my-docker-app
+`
+Image URI: `123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app:latest`
+
+Container port: `5000`
+
+Create the task definition.
+
+### 4.3 Create an ECS Service
+Now we need ECS to actually start the container.
+
+Go to:
+
+**ECS** → **Clusters** → **my-docker-cluster** → **Create**
+
+Select your task definition: `my-docker-app`
+
+Choose:
+```
+Compute options:
+Launch type
+
+Launch type:
+Fargate
+```
+
+Set the desired number of tasks: `1`
+
+For networking, select:
+
+- Your VPC
+- At least one subnet
+- A security group
+
+For a simple public test application, the task needs a public IP, so enable: `Public IP: Turn On`
+
+### 4.4 Configure the security group
+Your container listens on port: `5000`
+
+Therefore, the security group needs to allow inbound TCP traffic on port 5000.
+
+For a quick test:
+```
+Type: Custom TCP
+Port: 5000
+Source: 0.0.0.0/0
+```
+>**Important:** this exposes the application publicly. That is acceptable for a temporary tutorial, but for production you would normally put the service behind an Application Load Balancer, use HTTPS, and restrict network access appropriately.
+
+### 4.5 Deploy the service
+Click: **Create**
+
+ECS will now:
+```
+- Start a Fargate task.
+- Pull your image from ECR.
+- Create the container.
+- Start your python application.
+- Assign networking to the task.
+```
+You should eventually see:
+```
+Running: 1
+Desired: 1
+```
+### 4.6 Find the Application's public IP
+Go to:
+
+**ECS** → **Cluster** → **Service** → **Tasks**
+
+Click the running task.
+
+Find: `Public IP`
+
+For example, assuming the public IP you found is `3.120.50.100`, you need to open `http://3.120.50.100:5000`
+
+You should see:
+
+`Hello from Docker on AWS!`
+
+The application is running inside a container.
+
+You have deployed your Docker container to AWS!
