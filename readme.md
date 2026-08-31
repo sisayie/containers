@@ -180,10 +180,9 @@ You can verify it:
 `docker images`
 
 You should now have something like:
-```
-REPOSITORY
-my-docker-app
 
+REPOSITORY my-docker-app
+```
 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-docker-app
 ```
 
