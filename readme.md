@@ -145,7 +145,17 @@ docker login \
 --username AWS \
 --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
 ```
-You should receive:
+If you are using a specific profile, use the command:
+```
+aws ecr get-login-password \
+  --region us-east-1 \
+  --profile my-profile \
+  | docker login \
+      --username AWS \
+      --password-stdin 123456789012.dkr.ecr.eu-central-1.amazonaws.com
+```
+
+If login is successful, you should receive:
 
 `Login Succeeded`
 
