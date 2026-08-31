@@ -95,7 +95,7 @@ You should see something similar to:
 REPOSITORY      TAG       IMAGE ID       CREATED
 my-docker-app   latest    abc123...      ...
 ```
-### 2.4. Test the container locally
+### 2.4. Run the Container
 Before involving AWS, make sure the container works.
 
 Run:
