@@ -124,7 +124,7 @@ You can do this through the AWS Console, or with the AWS CLI.
 Using the CLI:
 ```
 aws ecr create-repository \
-  --repository-name my-docker-app \
+  --repository-name my-docker-repo \
   --region us-east-1
 ```
 AWS will return information about the repository.
