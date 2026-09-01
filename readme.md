@@ -44,8 +44,11 @@ Default output format: json
 </details>
 
 ---
+<details>
 
+<summary>
 ## Step 2. Create Containerized Application
+</summary>
 ### 2.1 Create the app
 Create a directory:
 
@@ -119,8 +122,16 @@ Hello from Docker on AWS!
 ```
 You can stop the container with: `Ctrl+C`
 
+</details>
+
 ---
+
+<details>
+
+<summary
 ## Step 3. Upload the Image to Amazon ECR Repository
+</summary>
+
 ECR repositories are where Docker images are stored.
 
 ### 3.1 Create Amazon ECR Repository
@@ -243,8 +254,12 @@ Once the image is available, you can run it as we did in step `2.4` above.
 - Prepare the EC2 using the information in `Step 1`
 - Pull the image from the registry as shown in step `3.5` avove
 
-## 4. Running the Container using ECS
+</details>
 
+<details>
+<summary>
+## 4. Running the Container using ECS
+</summary>
 ECR is essentially your container image storage.
 
 To actually run the container, you will use Amazon ECS.
@@ -368,3 +383,4 @@ You should see:
 The application is running inside a container.
 
 You have deployed your Docker container to AWS!
+</details>
