@@ -67,7 +67,6 @@ cd my-docker-app
 
 ```python
 print("Hello from Docker on AWS!")
-
 ```
 ### 2.2 Create the Dockerfile
 
