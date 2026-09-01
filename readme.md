@@ -206,7 +206,7 @@ You can view it listed in:
 
 **AWS Console** → **ECR** → **Repositories**
 
-### 3.5 Pull the Docker image from Amazon ECR
+### 3.5 Pull the Docker image from Amazon ECR (to run it on local machine)
 You can pull docker images stored in Amazon ECR and run them on your local host or EC2 server or any other server. But before that you need set up permissions. 
 
 **Required AWS permissions**
@@ -230,6 +230,11 @@ Verify it using `docker images`.
 Once the image is available, you can run it as we did in step `2.4` above.
 
 ---
+### 3.6 Pull the Docker image from Amazon ECR (on EC2 or other server)
+- Make sure the docker image is on ECR. If not, push it using `Step 3`
+- Set up EC2 and associated infrastructure
+- Prepare the EC2 using the information in `Step 1`
+- Pull the image from the registry as shown in step `3.5` avove
 
 ## 4. Running the Container using ECS
 
