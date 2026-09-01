@@ -1,7 +1,11 @@
 # Containers in AWS
 <details>
 
-<summary>## Step 1. Preparation</summary>
+<summary>
+
+## Step 1. Preparation
+
+</summary>
 
 Install:
 
@@ -36,7 +40,9 @@ Default region name: us-east-1
 Default output format: json
 
 >**Security tip:** don't put AWS access keys directly into your Dockerfile or source code.
+
 </details>
+
 ---
 
 ## Step 2. Create Containerized Application
