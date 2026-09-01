@@ -51,6 +51,7 @@ Default output format: json
 ## Step 2. Create Containerized Application
 
 </summary>
+
 ### 2.1 Create the app
 Create a directory:
 
@@ -264,7 +265,7 @@ Once the image is available, you can run it as we did in step `2.4` above.
 
 <summary>
 
-## 4. Running the Container using ECS
+## Step 4. Running the Container using ECS
 
 </summary>
 ECR is essentially your container image storage.
