@@ -5,7 +5,7 @@
 Install:
 
 * Docker
-* AWS CLI
+* AWS CLI -- refer to step [1.1](https://github.com/sisayie/exam-score-prediction/blob/main/README.md)
 * An AWS account
 
 Verify Docker:
