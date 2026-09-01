@@ -7,7 +7,7 @@
 
 </summary>
 
-Install:
+### 1.1 Install Required Tools:
 
 * Docker
 * AWS CLI -- refer to step [1.1](https://github.com/sisayie/exam-score-prediction/blob/main/README.md)
@@ -21,7 +21,7 @@ Verify AWS CLI:
 
 `aws --version`
 
-Configure your AWS credentials:
+### 1.2 Configure your AWS credentials
 
 `aws configure`
 
@@ -229,8 +229,34 @@ You can view it listed in:
 
 **AWS Console** → **ECR** → **Repositories**
 
-### 3.5 Pull the Docker image from Amazon ECR (to run it on local machine)
-You can pull docker images stored in Amazon ECR and run them on your local host or EC2 server or any other server. But before that you need set up permissions. 
+</details>
+
+---
+
+<details>
+
+<summary>
+
+## Step 4. Running the Container
+
+</summary>
+
+### 4.1 Running the Container on local machine
+
+Pull the Docker image from Amazon ECR. 
+
+You can pull docker images stored in Amazon ECR and run them on your local host or any other server. 
+
+Because your have already set up your credentials on your local machine, you can just run
+```
+docker pull 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
+```
+
+You can then run it using as you did in step `2.4` above.
+
+---
+### 4.2 Running the Container on on EC2 or other server
+You can pull docker images stored in Amazon ECR and run them on EC2 server. But before that you need set up permissions. 
 
 **Required AWS permissions**
 The IAM user/role doing this needs permissions such as:
@@ -240,39 +266,32 @@ ecr:BatchCheckLayerAvailability
 ecr:GetDownloadUrlForLayer
 ecr:BatchGetImage
 ```
-For a private ECR repository, you also need network access to ECR if you're pulling from a private environment.
+For a private ECR repository, you also need network access to ECR if you are pulling from a private environment.
 
 Once the permissions are set, you need to authenticate like we did in step `3.2` above and run the command:
 ```
 docker pull 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
 ```
-Here again, you need to replace `123456789012` with your account id and the region to your region.
+Here again, you need to replace `123456789012` with your account id and the region to your region. Or you can use command substitution ;)
 
 Verify it using `docker images`. 
 
 Once the image is available, you can run it as we did in step `2.4` above.
 
----
-### 3.6 Pull the Docker image from Amazon ECR (on EC2 or other server)
+Summing it up, to run the container, you need to pull the Docker image from Amazon ECR. 
+
 - Make sure the docker image is on ECR. If not, push it using `Step 3`
 - Set up EC2 and associated infrastructure
-- Prepare the EC2 using the information in `Step 1`
-- Pull the image from the registry as shown in step `3.5` avove
+- Prepare the EC2 using the information in `Step 1`. If you already set up IAM (e.g., using stack_v2.yml from the session on IaC), only do step `1.1` and skip step `1.2`.
+- Pull the image from the registry as shown in step `4.1`
 
-</details>
+### 4.3 Running the Container using ECS
 
-<details>
-
-<summary>
-
-## Step 4. Running the Container using ECS
-
-</summary>
 ECR is essentially your container image storage.
 
 To actually run the container, you will use Amazon ECS.
 
-### 4.1 Create an ECS cluster
+#### 4.3.1 Create an ECS cluster
 Make sure you have created an IAM role for container services.
 
 Open the AWS Console and go to:
@@ -289,7 +308,7 @@ For the infrastructure, choose:
 
 Create the cluster.
 
-### 4.2 Create an ECS Task Definition
+#### 4.3.2 Create an ECS Task Definition
 An ECS task definition tells AWS how your container should run.
 
 Go to:
@@ -316,7 +335,7 @@ Container port: `5000`
 
 Create the task definition.
 
-### 4.3 Create an ECS Service
+#### 4.3.3 Create an ECS Service
 Now we need ECS to actually start the container.
 
 Go to:
@@ -344,7 +363,7 @@ For networking, select:
 
 For a simple public test application, the task needs a public IP, so enable: `Public IP: Turn On`
 
-### 4.4 Configure the security group
+#### 4.3.4 Configure the security group
 Your container listens on port: `5000`
 
 Therefore, the security group needs to allow inbound TCP traffic on port 5000.
@@ -357,7 +376,7 @@ Source: 0.0.0.0/0
 ```
 >**Important:** this exposes the application publicly. That is acceptable for a temporary tutorial, but for production you would normally put the service behind an Application Load Balancer, use HTTPS, and restrict network access appropriately.
 
-### 4.5 Deploy the service
+#### 4.3.5 Deploy the service
 Click: **Create**
 
 ECS will now:
@@ -373,7 +392,7 @@ You should eventually see:
 Running: 1
 Desired: 1
 ```
-### 4.6 Find the Application's public IP
+#### 4.3.6 Find the Application's public IP
 Go to:
 
 **ECS** → **Cluster** → **Service** → **Tasks**
