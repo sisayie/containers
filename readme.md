@@ -258,16 +258,15 @@ You can then run it using as you did in step `2.4` above.
 You can pull docker images stored in Amazon ECR and run them on EC2 server. But before that you need set up permissions. 
 
 **Required AWS permissions**
-The IAM user/role doing this needs permissions such as:
+The IAM user/role doing this needs permission:
 ```
-ecr:GetAuthorizationToken
-ecr:BatchCheckLayerAvailability
-ecr:GetDownloadUrlForLayer
-ecr:BatchGetImage
+AmazonEC2ContainerRegistryReadOnly
 ```
+This gives the EC2 instance read access to ECR, including the permissions needed to authenticate and pull images.
+
 For a private ECR repository, you also need network access to ECR if you are pulling from a private environment.
 
-Once the permissions are set, you need to authenticate like we did in step `3.2` above and run the command:
+Once the permissions are set, you need to authenticate like we did in step `3.2` above and then run the command:
 ```
 docker pull 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
 ```
@@ -282,7 +281,29 @@ Summing it up, to run the container, you need to pull the Docker image from Amaz
 - Make sure the docker image is on ECR. If not, push it using `Step 3`
 - Set up EC2 and associated infrastructure
 - Prepare the EC2 using the information in `Step 1`. If you already set up IAM (e.g., using stack_v2.yml from the session on IaC), only do step `1.1` and skip step `1.2`.
+- While on EC2, authenticate docker to pull from ECR as we did in step `3.2`
 - Pull the image from the registry as shown in step `4.1`
+- Test if the docker image was pulled using `docker images`
+
+Once the image is pulled, use the following command to run it:
+```
+## Run
+docker run -d \
+  --name my-app \
+  -p 5000:5000 \
+  123456789012.dkr.ecr.us-east-1.amazonaws.com/exam-score-ml/exam-score-api:latest
+```
+
+Her again, you need to replace the account id.
+
+And test if the container is reachable:
+1. On EC2: `http://localhost:5000`
+
+2. On remote machines: `http://<public-ip-or-ec2>:5000`
+
+If `1` fails, make sure the docker container is exposing port 5000.
+
+If `1` works and `2` fails, make sure the SecurityGroup is allowing inboud traffic for port 5000.
 
 ### 4.3 Running the Container using ECS
 
