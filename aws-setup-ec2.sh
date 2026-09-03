@@ -77,4 +77,3 @@ docker run -d \
   -p 5000:5000 \
   #-e DOCKER_HOST=tcp://docker:2375 \
   339713011628.dkr.ecr.us-east-1.amazonaws.com/exam-score-ml/exam-score-api:latest
-
